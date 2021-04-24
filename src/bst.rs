@@ -21,6 +21,28 @@ impl<T: Ord + Display> Node<T> {
         }
     }
 
+    pub fn min(&self) -> &T {
+        &self.min_node().elem
+    }
+
+    pub fn min_node(&self) -> &Node<T> {
+        match self.left.as_ref() {
+            Some(x) => x.as_ref().min_node(),
+            None => &self,
+        }
+    }
+
+    pub fn max(&self) -> &T {
+        &self.max_node().elem
+    }
+
+    pub fn max_node(&self) -> &Node<T> {
+        match self.right.as_ref() {
+            Some(x) => x.as_ref().max_node(),
+            None => &self,
+        }
+    }
+
     pub fn search(&self, key: &T) -> bool {
         if key == &self.elem {
             true
@@ -149,6 +171,14 @@ impl<T: Ord + Display> BST<T> {
     pub fn to_vec_as_ref(&self) -> Option<Vec<&T>> {
         self.root.as_ref().map(|x| x.to_vec_as_ref())
     }
+
+    pub fn min(&self) -> Option<&T> {
+        self.root.as_ref().map(|x| x.min())
+    }
+
+    pub fn max(&self) -> Option<&T> {
+        self.root.as_ref().map(|x| x.max())
+    }
 }
 
 #[cfg(test)]
@@ -167,5 +197,8 @@ mod test {
         assert_eq!(tree.search(&11), false);
         tree.insert(20);
         assert_eq!(tree.search(&20), true);
+        assert_eq!(tree.min(), Some(&8));
+        assert_eq!(tree.max(), Some(&20));
+        assert_eq!(tree.max(), Some(&20));
     }
 }
